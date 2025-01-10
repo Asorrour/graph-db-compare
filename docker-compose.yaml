@@ -1,0 +1,40 @@
+services:
+  arangodb:
+    image: arangodb:latest
+    container_name: arangodb
+    ports:
+      - "8529:8529"
+    environment:
+      - ARANGO_ROOT_PASSWORD=password
+    volumes:
+      - arangodb-data:/var/lib/arangodb3
+
+  orientdb:
+    image: orientdb:latest
+    container_name: orientdb
+    ports:
+      - "2424:2424"  # Binary protocol
+      - "2480:2480"  # HTTP protocol
+    environment:
+      - ORIENTDB_ROOT_PASSWORD=admin
+    volumes:
+      - orientdb-data:/orientdb/databases
+      - orientdb-config:/orientdb/config
+
+  neptune-local:
+    image: tinkerpop/gremlin-server:3.6.0 # latest didn't work
+    container_name: neptune
+    ports:
+      - "8182:8182"
+    environment:
+      JANUS_PROPERTIES: /opt/neptune/conf/janusgraph-cassandra-es.properties
+      NEPTUNE_DB_PATH: /neptune-data
+    volumes:
+      - neptune-data:/neptune-data
+
+volumes:
+  arangodb-data:
+  orientdb-data:
+  orientdb-config:
+  neptune-data:
+
